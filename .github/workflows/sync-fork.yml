@@ -1,0 +1,22 @@
+name: Sync Fork
+
+on:
+  schedule:
+    # 每周五定时运行一次
+    - cron:  "0 16 * * 5"
+  workflow_dispatch: # 允许手动触发
+
+jobs:
+  repo-sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: repo-sync
+        uses: repo-sync/github-sync@v2
+        with:
+          source_repo: "immortalwrt/immortalwrt" # 替换成上游仓库的 "用户/仓库名"
+          source_branch: "*" # 上游仓库的主分支 *代表同步所有分支
+          destination_branch: "*" # 你的 fork 仓库的主分支 *代表同步所有分支
+          github_token: ${{ secrets.GITHUB_TOKEN }}
